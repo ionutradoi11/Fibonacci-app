@@ -2,40 +2,37 @@ package com.example.fibonacciapp.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Contacts.SettingsColumns.KEY
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.room.Room
 
 import com.example.fibonacciapp.R
 import kotlinx.android.synthetic.main.fragment_page_two.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.example.fibonacciapp.JsonPlaceHolderApi
-import com.example.fibonacciapp.Location
+import com.example.fibonacciapp.MainActivity
+import com.example.fibonacciapp.db.enitity.AppDatabase
+import com.example.fibonacciapp.db.enitity.LOCATION_TABLE_ID
+import com.example.fibonacciapp.db.enitity.Location
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-
-
 class FragmentPageTwo : Fragment() {
 
     private var param1: String? = null
-    var textViewResults: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(key)
-        }
-
-        textViewResults = titleView
+      //  arguments?.let {
+      //      param1 = it.getString(key)
+       // }
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://private-0c3260-ropa.apiary-mock.com/")
@@ -47,9 +44,6 @@ class FragmentPageTwo : Fragment() {
         val call = jsonPlaceHolderApi.locations
 
         call.enqueue(object : Callback<List<Location>>{
-            override fun onFailure(call: Call<List<Location>>, t: Throwable) {
-                textViewResults?.text = t.message
-            }
 
             @SuppressLint("SetTextI18n")
             override fun onResponse(
@@ -57,22 +51,27 @@ class FragmentPageTwo : Fragment() {
                 response: Response<List<Location>>
             ) {
                 if (!response.isSuccessful){
-                    textViewResults?.text = "Code: " + response.code()
+                    titleView?.text = "Code: " + response.code()
                     return
                 }
 
                 val locations : List<Location>? = response.body()
 
-                for (location in locations!!) {
-                    var content = ""
-                    content += "id: " + location.id + "\n"
-                    content += "title: " + location.title + "\n"
-                    content += "name: " + location.name + "\n"
-                    content += "image: " + location.image + "\n\n"
+                val firstElement = locations?.get(0)
 
-                    textViewResults?.append(content)
-                }
+                val firstImage = firstElement?.pictures?.get(0)
 
+                titleView.text = firstElement?.title
+
+                nameView.text = firstElement?.name
+
+                Picasso.get()
+                    .load(getUrl(id))
+                    .into(imageView)
+            }
+
+            override fun onFailure(call: Call<List<Location>>, t: Throwable) {
+                titleView?.text = t.message
             }
 
         })
@@ -92,6 +91,11 @@ class FragmentPageTwo : Fragment() {
 
     fun setUp() {
 
+    }
+
+    private fun getUrl(id: Int): String {
+        val id = (0..100).random()
+        return "https://picsum.photos/id/$id/200"
     }
 
     private val key = "key"

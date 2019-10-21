@@ -2,11 +2,16 @@ package com.example.fibonacciapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.example.fibonacciapp.adapter.FiboAdapter
+import com.example.fibonacciapp.db.enitity.AppDatabase
+import com.example.fibonacciapp.db.enitity.App_Entity
 import com.example.fibonacciapp.fragment.FragmentPageTwo
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +36,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUp(View(this))
+
+        var db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "AppDB").build()
+
+        Thread {
+            var loc = App_Entity()
+            loc.location_id = 2
+            loc.location_name = "Constantin Brancusi"
+            loc.location_title = "Bouillon-Chartier"
+            loc.location_picture = Picasso.get()
+                .load(getUrl(id = 45)).toString()
+
+            db.appDAO().saveLocation(loc)
+
+            db.appDAO().readLocation().forEach {
+                Log.i("@BLABLA", """"Id is : ${it.location_id}"""")
+                Log.i("@BLABLA", """"Name is : ${it.location_title}"""")
+                Log.i("@BLABLA", """"Title is : ${it.location_name}"""")
+                Log.i("@BLABLA", """"Picture is : ${it.location_picture}"""")
+            }
+
+        }.start()
     }
 
     fun setUp (view: View) {
@@ -42,6 +68,11 @@ class MainActivity : AppCompatActivity() {
         }
         recyclerView.adapter = adapter
 
+    }
+
+    private fun getUrl(id: Int): String {
+        val id = (0..100).random()
+        return "https://picsum.photos/id/$id/200"
     }
 
     private fun getFibonacciNumbers(limitNumber: Int): ArrayList<String> {
