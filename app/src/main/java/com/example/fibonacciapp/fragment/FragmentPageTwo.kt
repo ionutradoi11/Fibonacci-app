@@ -3,6 +3,7 @@ package com.example.fibonacciapp.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import com.example.fibonacciapp.JsonPlaceHolderApi
 import com.example.fibonacciapp.MainActivity
 import com.example.fibonacciapp.db.enitity.AppDatabase
+import com.example.fibonacciapp.db.enitity.App_Entity
 import com.example.fibonacciapp.db.enitity.LOCATION_TABLE_ID
 import com.example.fibonacciapp.db.enitity.Location
 import com.squareup.picasso.Picasso
@@ -32,7 +34,7 @@ class FragmentPageTwo : Fragment() {
         super.onCreate(savedInstanceState)
       //  arguments?.let {
       //      param1 = it.getString(key)
-       // }
+        // }
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://private-0c3260-ropa.apiary-mock.com/")
@@ -41,7 +43,7 @@ class FragmentPageTwo : Fragment() {
 
         val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
 
-        val call = jsonPlaceHolderApi.locations
+        var call = jsonPlaceHolderApi.locations
 
         call.enqueue(object : Callback<List<Location>>{
 
@@ -53,13 +55,14 @@ class FragmentPageTwo : Fragment() {
                 if (!response.isSuccessful){
                     titleView?.text = "Code: " + response.code()
                     return
+
                 }
 
-                val locations : List<Location>? = response.body()
+                var locations : List<Location>? = response.body()
 
-                val firstElement = locations?.get(0)
+                var firstElement = locations?.get(0)
 
-                val firstImage = firstElement?.pictures?.get(0)
+                var firstImage = firstElement?.pictures?.get(0)
 
                 titleView.text = firstElement?.title
 
@@ -75,6 +78,21 @@ class FragmentPageTwo : Fragment() {
             }
 
         })
+
+        Thread {
+
+        var db = Room.databaseBuilder(activity as MainActivity, AppDatabase::class.java, "AppDB").build()
+
+        db.appDAO().saveLocation(Location(0, "Titlul", "Numele", mutableListOf()))
+
+
+        db.appDAO().getLocation().forEach {
+            Log.i("@BLABLA", """"${it.id}"""")
+            Log.i("@BLABLA", """"${it.title}"""")
+            Log.i("@BLABLA", """"${it.name}"""")
+            Log.i("@BLABLA", """"${it.pictures}"""")
+        }
+    }.start()
     }
 
 
@@ -90,7 +108,6 @@ class FragmentPageTwo : Fragment() {
     }
 
     fun setUp() {
-
     }
 
     private fun getUrl(id: Int): String {

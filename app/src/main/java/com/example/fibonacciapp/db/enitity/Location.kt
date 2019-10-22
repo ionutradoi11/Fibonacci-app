@@ -1,25 +1,23 @@
 package com.example.fibonacciapp.db.enitity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 import com.google.gson.annotations.SerializedName
 
 const val LOCATION_TABLE_ID = 0
 
-
-
-@Entity(tableName = "location_table")
+@Entity
 data class Location (
-
-    val id: Int = 0,
-
-    val title: String? = null,
-
-    val name: String? = null,
+    var id: Int = 0,
+    @ColumnInfo(name = "location_title")
+    var title: String? = null,
+    @ColumnInfo(name = "location_name")
+    var name: String? = null,
+    @ColumnInfo(name = "location_image")
     @SerializedName("pictures")
-    val pictures: List<String>? = null
-) {
-    @PrimaryKey(autoGenerate = false)
-    var idLocation: Int = LOCATION_TABLE_ID
+    @TypeConverters(StringListConverter::class)
+    var pictures: MutableList<String>?
+){
+@PrimaryKey(autoGenerate = false)
+   var idLocation: Int = LOCATION_TABLE_ID
 }

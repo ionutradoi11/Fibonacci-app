@@ -10,12 +10,12 @@ class App_Entity {
 
 
     @PrimaryKey
-    var location_id : Int = 0
+    var locationId : Int = 0
 
     @ColumnInfo (name = "LOCATION_NAME")
-    var location_name: String = ""
+    var locationName: String = ""
     @ColumnInfo (name = "LOCATION_TITLE")
-    var location_title: String = ""
+    var locationTitle: String = ""
     @ColumnInfo (name = "LOCATION_IMAGE")
-    var location_picture: String = ""
+    var locationPicture: String = ""
 }

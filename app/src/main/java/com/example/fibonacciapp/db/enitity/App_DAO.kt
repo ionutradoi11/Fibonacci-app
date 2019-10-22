@@ -9,9 +9,9 @@ import androidx.room.Query
 interface App_DAO {
 
     @Insert
-    fun saveLocation(location: App_Entity)
+    fun saveLocation(location: Location)
 
-    @Query("select * from App_Entity")
-    fun readLocation() : List<App_Entity>
+    @Query("select * from Location")
+    fun getLocation() : List<Location>
 
 }

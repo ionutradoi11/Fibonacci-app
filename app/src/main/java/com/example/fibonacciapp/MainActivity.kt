@@ -10,6 +10,7 @@ import androidx.room.Room
 import com.example.fibonacciapp.adapter.FiboAdapter
 import com.example.fibonacciapp.db.enitity.AppDatabase
 import com.example.fibonacciapp.db.enitity.App_Entity
+import com.example.fibonacciapp.db.enitity.Location
 import com.example.fibonacciapp.fragment.FragmentPageTwo
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,26 +38,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setUp(View(this))
 
-        var db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "AppDB").build()
+        /*var db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "AppDB").build()
 
-        Thread {
-            var loc = App_Entity()
-            loc.location_id = 2
-            loc.location_name = "Constantin Brancusi"
-            loc.location_title = "Bouillon-Chartier"
-            loc.location_picture = Picasso.get()
-                .load(getUrl(id = 45)).toString()
+        var loc = App_Entity()
+        loc.location_id = 1
+        loc.location_name = "Dimitrie Cantemir"
+        loc.location_title = "Biblioteca Sainte-Genevieve"
+        loc.location_picture = Picasso.get()
+            .load(getUrl(id = 46)).toString()
 
-            db.appDAO().saveLocation(loc)
+        db.appDAO().saveLocation(loc)
 
-            db.appDAO().readLocation().forEach {
-                Log.i("@BLABLA", """"Id is : ${it.location_id}"""")
-                Log.i("@BLABLA", """"Name is : ${it.location_title}"""")
-                Log.i("@BLABLA", """"Title is : ${it.location_name}"""")
-                Log.i("@BLABLA", """"Picture is : ${it.location_picture}"""")
-            }
-
-        }.start()
+        db.appDAO().getLocation().forEach {
+            Log.i("@BLABLA", """"Id is : ${it.location_id}"""")
+            Log.i("@BLABLA", """"Name is : ${it.location_title}"""")
+            Log.i("@BLABLA", """"Title is : ${it.location_name}"""")
+            Log.i("@BLABLA", """"Picture is : ${it.location_picture}"""")
+        } */
     }
 
     fun setUp (view: View) {
