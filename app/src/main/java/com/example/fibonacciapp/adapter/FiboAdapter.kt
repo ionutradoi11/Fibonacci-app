@@ -3,8 +3,8 @@ package com.example.fibonacciapp.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fibonacciapp.R
@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.fibo_item.view.*
 
 
 class FiboAdapter(
-    private var listNumbers: ArrayList<String>
+    private var listNumbers: ArrayList<String>,
+    private val isButtonClickedlistener: (() -> Unit)?
 ) : RecyclerView.Adapter<FiboAdapter.FiboViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FiboViewHolder {
@@ -23,6 +24,11 @@ class FiboAdapter(
 
     override fun onBindViewHolder(holder: FiboViewHolder, position: Int) {
 
+        holder.button.setOnClickListener{
+            if (holder.checkBox.isChecked) {
+                isButtonClickedlistener?.invoke()
+            }
+        }
         val num = listNumbers[position]
         holder.numberView.text = num
 
@@ -39,10 +45,12 @@ class FiboAdapter(
         }
     }
 
-    class FiboViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val numberView = itemView.numberView as TextView
-        val imageView = itemView.imageView as ImageView
-        val rightSide = itemView.rightSide as LinearLayout
+    class FiboViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val numberView: TextView = view.numberView
+        val imageView: ImageView = view.imageView
+        val rightSide: View = view.rightSide
+        val button: View = view.btnCheck
+        val checkBox: CheckBox = view.checkBox
     }
 
     override fun getItemCount() = listNumbers.size
