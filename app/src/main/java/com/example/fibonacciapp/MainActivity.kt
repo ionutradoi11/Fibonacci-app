@@ -7,6 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.example.fibonacciapp.Model.FiboModel
 import com.example.fibonacciapp.adapter.FiboAdapter
 import com.example.fibonacciapp.db.enitity.AppDatabase
 import com.example.fibonacciapp.db.enitity.App_Entity
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 transaction.addToBackStack(null)
                 transaction.commit()
             },
-            listNumbers = listFibonacciNumbers
+            list = listFibonacciNumbers
         )
     }
 
@@ -73,19 +74,19 @@ class MainActivity : AppCompatActivity() {
         return "https://picsum.photos/id/$id/200"
     }
 
-    private fun getFibonacciNumbers(limitNumber: Int): ArrayList<String> {
-        val listOfFiboNumbers = ArrayList<String>()
+    private fun getFibonacciNumbers(limitNumber: Int): ArrayList<FiboModel> {
+        val listOfFiboNumbers = ArrayList<FiboModel>()
 
         var i = 1
         var n1 = 1
         var n2 = 1
 
-        listOfFiboNumbers.add("1")
-        listOfFiboNumbers.add("1")
+        listOfFiboNumbers.add(FiboModel("1"))
+        listOfFiboNumbers.add(FiboModel("1"))
 
         while (i <= limitNumber) {
             val sum = n1 + n2
-            listOfFiboNumbers.add(sum.toString())
+            listOfFiboNumbers.add(FiboModel(sum.toString()))
             n1 = n2
             n2 = sum
             i++

@@ -7,15 +7,17 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fibonacciapp.Model.FiboModel
 import com.example.fibonacciapp.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fibo_item.view.*
 
-
 class FiboAdapter(
-    private var listNumbers: ArrayList<String>,
+    private val list: ArrayList<FiboModel>,
     private val isButtonClickedlistener: (() -> Unit)?
 ) : RecyclerView.Adapter<FiboAdapter.FiboViewHolder>() {
+
+    private val listNumbers: ArrayList<FiboModel> = ArrayList(list)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FiboViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fibo_item, parent, false)
@@ -23,19 +25,22 @@ class FiboAdapter(
     }
 
     override fun onBindViewHolder(holder: FiboViewHolder, position: Int) {
-
         holder.button.setOnClickListener{
             if (holder.checkBox.isChecked) {
                 isButtonClickedlistener?.invoke()
             }
         }
-        val num = listNumbers[position]
-        holder.numberView.text = num
+        val item = listNumbers[position]
+        holder.numberView.text = item.number
+        holder.checkBox.setOnCheckedChangeListener { compoundButton, b ->
+            item.isChecked = b
+        }
+        holder.checkBox.isChecked = item.isChecked
 
-        if (isNonPrimeNumber(num.toInt())) {
+        if (isNonPrimeNumber(item.number?.toInt() ?: 0)) {
             holder.rightSide.visibility = View.INVISIBLE
             Picasso.get()
-                .load(getUrl(num.toInt()))
+                .load(getUrl(item.number?.toInt() ?: 0))
                 .resize(100, 100)
                 .centerCrop()
                 .into(holder.imageView)
@@ -53,10 +58,10 @@ class FiboAdapter(
         val checkBox: CheckBox = view.checkBox
     }
 
+
     override fun getItemCount() = listNumbers.size
 
     private fun getUrl(id: Int): String {
-   //        val id = (0..100).random()
         return "https://picsum.photos/id/$id/200"
     }
 
@@ -68,6 +73,7 @@ class FiboAdapter(
 
         var flag = false
         for (i in 2..number / 2) {
+
             // condition for nonprime number
             if (number % i == 0) {
                 flag = true
